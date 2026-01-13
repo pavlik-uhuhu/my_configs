@@ -1,0 +1,113 @@
+# Yazi keymap - Ranger-style bindings
+
+[mgr]
+prepend_keymap = [
+    # Navigation (like ranger)
+    { on = "h", run = ["escape --find", "leave"], desc = "Go to parent directory" },
+    { on = "j", run = "arrow 1", desc = "Move cursor down" },
+    { on = "k", run = "arrow -1", desc = "Move cursor up" },
+    { on = "l", run = ["escape --find", "plugin smart-enter"], desc = "Enter directory / Open file" },
+    { on = "<Left>", run = ["escape --find", "leave"], desc = "Go to parent directory" },
+    { on = "<Right>", run = ["escape --find", "plugin smart-enter"], desc = "Enter directory / Open file" },
+
+    { on = "H", run = "back", desc = "Go back in history" },
+    { on = "L", run = "forward", desc = "Go forward in history" },
+
+    { on = ["g", "g"], run = "arrow -99999999", desc = "Go to top" },
+    { on = "G", run = "arrow 99999999", desc = "Go to bottom" },
+
+    { on = ["g", "h"], run = "cd ~", desc = "Go to home" },
+    { on = ["g", "r"], run = "cd /", desc = "Go to root" },
+    { on = ["g", "d"], run = "cd ~/Dev", desc = "Go to Dev" },
+    { on = ["g", "D"], run = "cd ~/Downloads", desc = "Go to Downloads" },
+
+    # File operations (ranger style)
+    { on = ["d", "d"], run = "yank --cut", desc = "Cut file (dd)" },
+    { on = ["y", "y"], run = "yank", desc = "Copy file (yy)" },
+
+    { on = ["y", "d"], run = 'shell "dirname %s | tr -d \"\\n\" | yank_gen"', desc = "Yank dir" },
+    { on = ["y", "n"], run = 'shell "basename %s | tr -d \"\\n\" | yank_gen"', desc = "Yank name" },
+    { on = ["y", "."], run = 'shell "f=%s; basename \"${f%%.*}\" | tr -d \"\\n\" | yank_gen"', desc = "Yank name without ext" },
+    { on = ["y", "p"], run = 'shell "printf %%s %s | yank_gen"', desc = "Yank path" },
+
+    { on = ["p", "p"], run = ["paste", "unyank"], desc = "Paste file (pp)" },
+    { on = ["p", "o"], run = ["paste --force", "unyank"], desc = "Paste overwrite" },
+    { on = ["p", "l"], run = "link", desc = "Paste as symlink" },
+
+    { on = ["d", "D"], run = "remove --permanently", desc = "Delete file" },
+    { on = ["d", "t"], run = "remove", desc = "Trash file" },
+    { on = ["d", "c"], run = "plugin what-size", desc = "Calculate cumulative size" },
+
+    # Rename (ranger: cw)
+    { on = ["c", "w"], run = "rename --cursor=before_ext", desc = "Rename file" },
+    { on = "a", run = "rename --cursor=before_ext", desc = "Rename (append)" },
+    { on = "A", run = "rename --cursor=end", desc = "Rename at end" },
+    { on = "I", run = "rename --cursor=start", desc = "Rename at start" },
+
+    # Selection (ranger style)
+    { on = "<Space>", run = ["toggle", "arrow 1"], desc = "Toggle select and move down" },
+    { on = "v", run = "toggle_all --state=true", desc = "Select all" },
+    { on = "V", run = "toggle_all", desc = "Toggle select all" },
+    { on = ["u", "v"], run = "toggle_all --state=false", desc = "Unselect all" },
+
+    # Search (ranger style - interactive find)
+    { on = "/", run = "find --smart", desc = "Find in current dir" },
+    { on = "n", run = "find_arrow", desc = "Next match" },
+    { on = "N", run = "find_arrow --previous", desc = "Previous match" },
+    { on = "f", run = "filter --smart", desc = "Filter files" },
+    { on = "s", run = "search", desc = "Search with external tool" },
+
+    # Sorting (ranger: o*)
+    { on = ["o", "n"], run = "sort filename", desc = "Sort by name" },
+    { on = ["o", "N"], run = "sort filename --reverse", desc = "Sort by name (reverse)" },
+    { on = ["o", "s"], run = "sort size", desc = "Sort by size" },
+    { on = ["o", "S"], run = "sort size --reverse", desc = "Sort by size (reverse)" },
+    { on = ["o", "m"], run = "sort mtime", desc = "Sort by modified time" },
+    { on = ["o", "M"], run = "sort mtime --reverse", desc = "Sort by modified (reverse)" },
+    { on = ["o", "e"], run = "sort ext", desc = "Sort by extension" },
+
+    # Toggle hidden (ranger: zh)
+    { on = ["z", "h"], run = "hidden toggle", desc = "Toggle hidden files" },
+    { on = ".", run = "hidden toggle", desc = "Toggle hidden files (alt)" },
+
+    # Preview / Info
+    { on = "i", run = "inspect", desc = "Inspect file" },
+
+    # Shell (ranger: S)
+    { on = "S", run = "shell --interactive --block", desc = "Open shell" },
+    { on = "!", run = "shell --interactive --block", desc = "Open shell (alt)" },
+
+    # Open with (ranger: r)
+    { on = "r", run = "open --interactive", desc = "Open with..." },
+
+    # Edit
+    { on = "<F4>", run = ["escape --find", 'shell "$EDITOR $@" --block'], desc = "Edit file" },
+
+    # Create
+    { on = ["m", "k"], run = "create --dir", desc = "Create directory (mkdir)" },
+    { on = ["t", "n"], run = "create", desc = "Create file (touch)" },
+
+    # Tabs
+    { on = "<C-n>", run = "tab_create --current", desc = "New tab" },
+    { on = "q", run = "tab_close", desc = "Close tab" },
+    { on = "<Tab>", run = "tab_switch 1 --relative", desc = "Next tab" },
+    { on = "<Backtab>", run = "tab_switch -1 --relative", desc = "Previous tab" },
+
+    # Quit
+    { on = "Q", run = "quit", desc = "Quit" },
+    { on = ["Z", "Z"], run = "quit", desc = "Quit (ZZ)" },
+    { on = ["Z", "Q"], run = "quit", desc = "Quit (ZQ)" },
+
+    # Misc
+    { on = "<Esc>", run = ["escape --all", "unyank"], desc = "Cancel and clear yank" },
+    { on = "<C-r>", run = "refresh", desc = "Refresh" },
+    { on = "<Enter>", run = ["escape --find", "plugin smart-enter"], desc = "Enter directory / Open file" },
+    { on = "<C-h>", run = ["escape --find", "leave"], desc = "Go to parent (alt)" },
+    { on = "<C-l>", run = ["escape --find", "enter"], desc = "Enter directory (alt)" },
+]
+
+[input]
+prepend_keymap = [
+    { on = "<Esc>", run = "close", desc = "Cancel input" },
+    { on = "<Enter>", run = "close --submit", desc = "Confirm" },
+]

@@ -1,0 +1,13 @@
+#!/bin/bash
+input=$(cat)
+
+if [ -n "$SSH_TTY" ]; then
+    printf '\033]52;c;%s\007' "$(printf %s "$input" | base64)" > "$SSH_TTY"
+elif [ "$(uname)" = "Darwin" ]; then
+    printf %s "$input" | pbcopy
+elif [ -n "$DISPLAY" ]; then
+    printf %s "$input" | xclip -selection clipboard
+elif [ -n "$WAYLAND_DISPLAY" ]; then
+    printf %s "$input" | wl-copy
+fi
+
